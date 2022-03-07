@@ -844,6 +844,7 @@ pimcore.document.editables.areablock = Class.create(pimcore.document.area_abstra
                     index: index,
                     blockStateStack: this.config['blockStateStack'],
                     areablockConfig: Ext.encode(this.initalConfig),
+                    removedInSession: Ext.encode(this.removedInSession),
                     areablockData: Ext.encode(saveData)
                 },
                 success: function (response) {
@@ -879,6 +880,7 @@ pimcore.document.editables.areablock = Class.create(pimcore.document.area_abstra
         let editablesContainer = container.query('[data-block-names]');
         editablesContainer.forEach(editableDiv => {
             editableManager.remove(editableDiv.dataset.name);
+            this.removedInSession.push(editableDiv.dataset.name);
         });
 
         container.remove();

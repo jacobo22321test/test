@@ -14,6 +14,7 @@
 pimcore.registerNS("pimcore.document.area_abstract");
 pimcore.document.area_abstract = Class.create(pimcore.document.editable, {
     dialogBoxes: {},
+    removedInSession: [],
 
     openEditableDialogBox: function (element, dialogBoxDiv) {
         let id = dialogBoxDiv.dataset.dialogId;
@@ -147,6 +148,7 @@ pimcore.document.area_abstract = Class.create(pimcore.document.editable, {
         Object.values(editableManager.getEditables()).forEach(editable => {
             if(editable.getInDialogBox() === id) {
                 editableManager.remove(editable.getName());
+                this.removedInSession.push(editable.getName());
             }
         });
 

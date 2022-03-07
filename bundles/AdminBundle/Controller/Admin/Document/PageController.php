@@ -443,7 +443,7 @@ class PageController extends DocumentControllerBase
         $blockStateStackData = json_decode($request->get('blockStateStack'), true);
         $blockStateStack->loadArray($blockStateStackData);
 
-        $document = Document\PageSnippet::getById($request->get('documentId'));
+        $document = clone Document\PageSnippet::getById($request->get('documentId'));
 
         $twig->addGlobal('document', $document);
         $twig->addGlobal('editmode', true);
@@ -459,6 +459,14 @@ class PageController extends DocumentControllerBase
         $areablock->setEditmode(true);
         $areaBrickData = json_decode($request->get('areablockData'), true);
         $areablock->setDataFromEditmode($areaBrickData);
+
+        //temporary remove areabrick (which are removed in current session) from the document
+        if ($removedBlocks = json_decode($request->get('removedInSession'))) {
+            foreach ($removedBlocks as $removedBlock) {
+                $document->removeEditable($removedBlock);
+            }
+        }
+
         $htmlCode = trim($areablock->renderIndex($request->get('index'), true));
 
         return new JsonResponse([
